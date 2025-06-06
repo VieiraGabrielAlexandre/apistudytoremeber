@@ -4,6 +4,9 @@ import br.com.vieiragabriel.exerciciossb.models.entities.Produto;
 import br.com.vieiragabriel.exerciciossb.models.repositories.ProdutoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -63,4 +66,16 @@ public class ProdutoController {
             produtoRepository.deleteById(id);
         }
     }
+
+    @GetMapping("/paginacao/{page}/{size}")
+    public Page<Produto> getProdutosPaginados(@PathVariable int page, @PathVariable int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return produtoRepository.findAll(pageable);
+    }
+
+    @GetMapping("/nome/{nome}")
+    public Iterable<Produto> getProdutosPorNome(@PathVariable String nome) {
+        return produtoRepository.findByNomeContaining(nome);
+    }
+
 }
